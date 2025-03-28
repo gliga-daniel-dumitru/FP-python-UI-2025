@@ -1,0 +1,101 @@
+@import 'tailwindcss';
+
+@theme {
+}
+
+@custom-variant dark (&:is(.dark *));
+
+.post-input:focus {
+    outline: none;
+}
+.comment-input:focus {
+    outline: none;
+}
+
+.bg-background {
+    @apply bg-gray-50 dark:bg-neutral-900;
+}
+/* 
+body {
+    @apply bg-gray-50 text-gray-800;
+}
+
+.dark-mode {
+    @apply bg-gray-900 text-white;
+}
+
+textarea:focus {
+    @apply outline-none;
+}
+
+input:focus {
+    @apply outline-none;
+}
+
+.bg-white {
+    @apply bg-white;
+}
+
+.bg-gray-50 {
+    @apply bg-gray-50;
+}
+
+.bg-gray-100 {
+    @apply bg-gray-100;
+}
+
+.text-gray-600 {
+    @apply text-gray-600;
+}
+
+.text-gray-700 {
+    @apply text-gray-700;
+}
+
+.text-gray-400 {
+    @apply text-gray-400;
+}
+
+.shadow-sm {
+    @apply shadow-sm;
+}
+
+.rounded-lg {
+    @apply rounded-lg;
+}
+
+.hidden {
+    @apply hidden;
+}
+
+.transition-colors {
+    @apply transition-colors;
+}
+
+.bg-primary {
+    @apply bg-purple-600;
+}
+
+.text-primary {
+    @apply text-purple-600;
+}
+
+.hover\:bg-gray-100:hover {
+    @apply bg-gray-100;
+}
+
+.hover\:bg-primary:hover {
+    @apply bg-purple-600;
+}
+
+.hover\:opacity-90:hover {
+    @apply opacity-90;
+}
+
+.hover\:text-primary:hover {
+    @apply text-purple-600;
+}
+
+.placeholder-gray-400::placeholder {
+    @apply text-gray-400;
+} */
