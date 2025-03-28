@@ -2,7 +2,10 @@
 
 import { useState } from 'react';
 
+import { useLocalPostContext } from '@/app/providers/LocalPostProvider';
+
 const PostInput = () => {
+    const { createPost, showNotification } = useLocalPostContext();
     const [postContent, setPostContent] = useState('');
     const [charCount, setCharCount] = useState(0);
     const [error, setError] = useState('');
@@ -16,13 +19,14 @@ const PostInput = () => {
 
     const handlePostSubmit = () => {
         if (postContent.trim()) {
+            createPost(postContent);
             setPostContent('');
             setCharCount(0);
         }
     };
 
     return (
-        <div className='mb-8 rounded-lg bg-white p-6 shadow-sm dark:bg-neutral-800'>
+        <div className='light-bg-white_dark_bg-neutral-800 mb-8 rounded-lg p-6 shadow-sm'>
             <textarea
                 value={postContent}
                 onChange={handlePostChange}
@@ -38,7 +42,7 @@ const PostInput = () => {
                 <button
                     onClick={handlePostSubmit}
                     disabled={!!error || charCount === 0}
-                    className='cursor-pointer rounded-lg bg-purple-600 px-6 py-2 text-white transition-colors hover:bg-purple-700 disabled:cursor-not-allowed disabled:bg-gray-500'>
+                    className='cursor-pointer rounded-lg bg-purple-600 px-6 py-2 text-white hover:bg-purple-700 disabled:cursor-not-allowed disabled:bg-gray-500'>
                     Post
                 </button>
             </div>

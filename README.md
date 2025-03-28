@@ -1,4 +1,4 @@
-# FP Python UI 2025 (tailwind) [[LIVE DEMO](https://fp-python-ui-2025.vercel.app/)]
+# FP Python UI 2025 (tailwind)
 
 Welcome to the **FP Python UI 2025** repository! This starter template is built with Next.js 15, React 19, TypeScript 5, Tailwind CSS 4 and comes packed with several powerful tools and configurations to accelerate your project setup and streamline development workflows using VS Code.
 

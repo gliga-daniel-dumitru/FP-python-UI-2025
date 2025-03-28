@@ -1,8 +1,5 @@
 @import 'tailwindcss';
 
-@theme {
-}
-
 @custom-variant dark (&:is(.dark *));
 
 .post-input:focus {
@@ -12,90 +9,53 @@
     outline: none;
 }
 
-.bg-background {
+.light-bg-gray-50_dark_bg-neutral-900 {
     @apply bg-gray-50 dark:bg-neutral-900;
 }
-/* 
-body {
-    @apply bg-gray-50 text-gray-800;
+
+.light-bg-white_dark_bg-neutral-800 {
+    @apply bg-white dark:bg-neutral-800;
 }
 
-.dark-mode {
-    @apply bg-gray-900 text-white;
+.lightb-g-gray-100_dark_bg-neutral-700 {
+    @apply bg-gray-100 dark:bg-neutral-700;
 }
 
-textarea:focus {
-    @apply outline-none;
+.light-text-white_dark_text-gray-600 {
+    @apply text-white dark:text-gray-600;
 }
 
-input:focus {
-    @apply outline-none;
+/* Hide scrollbar for all scrollable elements */
+::-webkit-scrollbar {
+    display: none; /* For Chrome, Safari, and Edge */
 }
 
-.bg-white {
-    @apply bg-white;
+* {
+    scrollbar-width: none; /* For Firefox */
+    -ms-overflow-style: none; /* For Internet Explorer and Edge */
 }
 
-.bg-gray-50 {
-    @apply bg-gray-50;
+.light-bg-white_dark-bg-neutral-800 {
+    @apply bg-white dark:bg-neutral-800;
 }
 
-.bg-gray-100 {
-    @apply bg-gray-100;
+.light-bg-gray-50_dark-bg-neutral-900 {
+    @apply bg-gray-50 dark:bg-neutral-900;
 }
 
-.text-gray-600 {
-    @apply text-gray-600;
+.light-bg-red-100_dark-bg-red-900 {
+    @apply bg-red-100 dark:bg-red-900;
 }
 
-.text-gray-700 {
-    @apply text-gray-700;
+/* Text color utilities */
+.light-text-gray-900_dark-text-gray-100 {
+    @apply text-gray-900 dark:text-gray-100;
 }
 
-.text-gray-400 {
-    @apply text-gray-400;
+.light-text-gray-500_dark-text-gray-400 {
+    @apply text-gray-500 dark:text-gray-400;
 }
 
-.shadow-sm {
-    @apply shadow-sm;
+.light-text-red-600_dark-text-red-400 {
+    @apply text-red-600 dark:text-red-400;
 }
-
-.rounded-lg {
-    @apply rounded-lg;
-}
-
-.hidden {
-    @apply hidden;
-}
-
-.transition-colors {
-    @apply transition-colors;
-}
-
-.bg-primary {
-    @apply bg-purple-600;
-}
-
-.text-primary {
-    @apply text-purple-600;
-}
-
-.hover\:bg-gray-100:hover {
-    @apply bg-gray-100;
-}
-
-.hover\:bg-primary:hover {
-    @apply bg-purple-600;
-}
-
-.hover\:opacity-90:hover {
-    @apply opacity-90;
-}
-
-.hover\:text-primary:hover {
-    @apply text-purple-600;
-}
-
-.placeholder-gray-400::placeholder {
-    @apply text-gray-400;
-} */

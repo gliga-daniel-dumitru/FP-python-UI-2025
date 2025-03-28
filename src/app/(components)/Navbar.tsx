@@ -2,13 +2,11 @@
 
 import Link from 'next/link';
 
-import ThemeSwitch from '@/app/components/ThemeSwitch';
-
-const noop = () => null;
+import ThemeSwitch from '@/app/(components)/ThemeSwitch';
 
 const Navbar = () => {
     return (
-        <nav className='fixed top-0 z-40 w-full bg-white shadow-sm dark:bg-neutral-800'>
+        <nav className='light-bg-white_dark_bg-neutral-800 fixed top-0 z-40 w-full shadow-sm'>
             <div className='mx-auto max-w-7xl px-4'>
                 <div className='flex h-16 justify-between'>
                     <div className='flex items-center'>

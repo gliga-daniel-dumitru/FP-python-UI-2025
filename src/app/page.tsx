@@ -1,1 +1,9 @@
-export { default } from '@/app/components/modules/Home';
+import React from 'react';
+
+import HomePage from './(components)/modules/Home';
+
+const Home = () => {
+    return <HomePage />;
+};
+
+export default Home;
