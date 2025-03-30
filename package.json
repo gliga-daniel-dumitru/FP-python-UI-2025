@@ -14,6 +14,7 @@
     "dependencies": {
         "@headlessui/react": "^2.2.0",
         "@heroicons/react": "^2.2.0",
+        "@prisma/client": "^6.5.0",
         "axios": "^1.8.4",
         "date-fns": "^4.1.0",
         "next": "15.2.3",
@@ -42,6 +43,7 @@
         "postcss": "^8.5.3",
         "prettier": "^3.5.3",
         "prettier-plugin-tailwindcss": "^0.6.11",
+        "prisma": "^6.5.0",
         "tailwindcss": "^4.0.17",
         "typescript": "^5.8.2",
         "typescript-eslint": "^8.27.0"

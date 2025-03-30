@@ -1,0 +1,35 @@
+// prisma/schema.prisma
+
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Generate the Prisma Client in JavaScript
+generator client {
+  provider = "prisma-client-js"
+}
+
+// This block of code defines the database connection. The database is a PostgreSQL database. 
+// The database connection URL will be read from an environment variable named `DATABASE_URL`.
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Post {
+  id        String   @id @default(uuid())   // Unique identifier for the post
+  content   String                          // Content of the post
+  createdAt DateTime @default(now())        // Timestamp when the post was created
+  updatedAt DateTime @updatedAt             // Timestamp when the post was last updated
+  likes     Int      @default(0)                 // Number of likes for the post
+  detectedEmotion String?                        // Detected emotion from the post content
+  comments  Comment[]                     // One-to-many relationship with Comment
+}
+
+model Comment {
+  id        String   @id @default(uuid())   // Unique identifier for the comment
+  content   String                          // Content of the comment
+  createdAt DateTime @default(now())        // Timestamp when the comment was created
+  updatedAt DateTime @updatedAt             // Timestamp when the comment was last updated
+  postId    String                          // Foreign key to Post
+  post      Post     @relation(fields: [postId], references: [id]) // Relation to Post
+}

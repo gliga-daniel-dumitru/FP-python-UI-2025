@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import { useLocalPostContext } from '@/app/providers/LocalPostProvider';
+import { usePosts } from '@/app/providers/PostProvider';
 import { Post } from '@/app/types';
 
 import DeleteModal from '../common/DeleteModal';
@@ -13,7 +13,7 @@ interface PostCardProps {
 }
 
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
-    const { deletePost, updatePost } = useLocalPostContext();
+    const { updatePost, deletePost } = usePosts();
     const [tempPostContent, setTempPostContent] = React.useState<string>(post.content);
 
     const [confirmDelete, setConfirmDelete] = React.useState(false);

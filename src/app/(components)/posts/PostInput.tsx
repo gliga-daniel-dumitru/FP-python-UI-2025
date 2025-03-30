@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 
-import { useLocalPostContext } from '@/app/providers/LocalPostProvider';
+import { usePosts } from '@/app/providers/PostProvider';
 
 const PostInput = () => {
-    const { createPost, showNotification } = useLocalPostContext();
+    const { createPost } = usePosts();
     const [postContent, setPostContent] = useState('');
     const [charCount, setCharCount] = useState(0);
     const [error, setError] = useState('');

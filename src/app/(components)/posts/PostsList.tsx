@@ -2,26 +2,31 @@
 
 import React, { useEffect } from 'react';
 
-import { useLocalPostContext } from '@/app/providers/LocalPostProvider';
-import { usePostContext } from '@/app/providers/PostProvider';
+import { usePosts } from '@/app/providers/PostProvider';
 
-import { useNotification } from '../hooks/useNotification';
 import PostCard from './PostCard';
+import PostCardSkeleton from './PostCardSkeleton';
 
 const PostsList = () => {
-    const { posts, fetchPosts, showNotification } = useLocalPostContext();
+    const { loading, error, posts, fetchPosts } = usePosts();
 
     useEffect(() => {
         void fetchPosts();
     }, []);
 
-    // if (loading) {
-    //     return <div className='text-center'>Loading...</div>;
-    // }
+    if (loading || !posts) {
+        return (
+            <>
+                <PostCardSkeleton />
+                <PostCardSkeleton />
+                <PostCardSkeleton />
+            </>
+        );
+    }
 
-    // if (error) {
-    //     return <div className='text-center text-red-500'>{error}</div>;
-    // }
+    if (error) {
+        return <div className='text-center text-red-500'>{error}</div>;
+    }
 
     return (
         <>
