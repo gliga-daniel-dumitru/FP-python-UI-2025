@@ -10,7 +10,7 @@ interface PostContextProps {
     posts: Post[] | null;
     fetchPosts: () => Promise<void>;
     createPost: (content: string) => Promise<void>;
-    updatePost: (id: string, updatedPost: Pick<Post, 'content'>) => Promise<void>;
+    updatePost: (id: string, updatedPost: Partial<Pick<Post, 'content' | 'likes'>>) => Promise<void>;
     deletePost: (id: string) => Promise<void>;
     error: string | null;
     loading: boolean;
@@ -61,8 +61,7 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
     };
 
-    // Update an existing post
-    const updatePost = async (id: string, updatedPost: Pick<Post, 'content'>) => {
+    const updatePost = async (id: string, updatedPost: Partial<Pick<Post, 'content' | 'likes'>>) => {
         setError(null);
         try {
             if (updatedPost.content && updatedPost.content.trim() === '') {

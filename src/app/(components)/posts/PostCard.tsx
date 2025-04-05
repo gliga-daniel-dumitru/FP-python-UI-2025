@@ -5,6 +5,7 @@ import React from 'react';
 import { usePosts } from '@/app/providers/PostProvider';
 import { Post } from '@/app/types';
 
+import CommentsModal from '../common/CommentsModal';
 import DeleteModal from '../common/DeleteModal';
 import { formatDistanceToNow } from 'date-fns';
 
@@ -15,18 +16,29 @@ interface PostCardProps {
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
     const { updatePost, deletePost } = usePosts();
     const [tempPostContent, setTempPostContent] = React.useState<string>(post.content);
+    const [showComments, setShowComments] = React.useState(false);
 
     const [confirmDelete, setConfirmDelete] = React.useState(false);
     const [showEdit, setShowEdit] = React.useState(false);
 
     const handleOnEdit = () => {
         setShowEdit(false);
-        updatePost(post.id, { content: tempPostContent });
+        if (tempPostContent !== post.content) {
+            updatePost(post.id, { content: tempPostContent });
+        }
     };
 
     const handleOnConfirmDelete = () => {
         setConfirmDelete(false);
         deletePost(post.id);
+    };
+
+    const handleOnLike = () => {
+        if (post.likes) {
+            updatePost(post.id, { likes: post.likes + 1 });
+        } else {
+            updatePost(post.id, { likes: 1 });
+        }
     };
 
     return (
@@ -93,19 +105,22 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                 )}
 
                 <div className='mb-4 flex items-center space-x-6'>
-                    <button className='hover:text-primary flex cursor-pointer items-center space-x-2 text-gray-500 dark:text-white'>
+                    <button
+                        onClick={handleOnLike}
+                        className='hover:text-primary flex cursor-pointer items-center space-x-2 text-gray-500 dark:text-white'>
                         <i className={`ri-heart-${post.likes ? 'fill text-primary' : 'line'} text-xl`}></i>
                         <span>{post.likes}</span>
                     </button>
-                    {post?.comments && (
-                        <button className='hover:text-primary flex cursor-pointer items-center space-x-2 text-gray-500 dark:text-white'>
-                            <i className='ri-chat-1-line text-xl'></i>
-                            <span>{post?.comments.length}</span>
-                        </button>
-                    )}
+                    <button
+                        onClick={() => setShowComments(!showComments)}
+                        className='hover:text-primary flex cursor-pointer items-center space-x-2 text-gray-500 dark:text-white'>
+                        <i className='ri-chat-1-line text-xl'></i>
+                        <span>{post?.comments?.length ?? 0}</span>
+                    </button>
                 </div>
             </div>
             <DeleteModal open={confirmDelete} setOpen={setConfirmDelete} onDelete={handleOnConfirmDelete} />
+            <CommentsModal open={showComments} setOpen={setShowComments} comments={post.comments ?? []} />
         </>
     );
 };
