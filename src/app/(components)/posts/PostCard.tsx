@@ -14,7 +14,7 @@ interface PostCardProps {
 }
 
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
-    const { updatePost, deletePost } = usePosts();
+    const { updatePost, deletePost, addComment } = usePosts();
     const [tempPostContent, setTempPostContent] = React.useState<string>(post.content);
     const [showComments, setShowComments] = React.useState(false);
 
@@ -39,6 +39,10 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
         } else {
             updatePost(post.id, { likes: 1 });
         }
+    };
+
+    const handleOnCreateComment = (commentContent: string) => {
+        addComment(post.id, commentContent);
     };
 
     return (
@@ -120,7 +124,12 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                 </div>
             </div>
             <DeleteModal open={confirmDelete} setOpen={setConfirmDelete} onDelete={handleOnConfirmDelete} />
-            <CommentsModal open={showComments} setOpen={setShowComments} comments={post.comments ?? []} />
+            <CommentsModal
+                open={showComments}
+                setOpen={setShowComments}
+                comments={post.comments ?? []}
+                onCreateComment={handleOnCreateComment}
+            />
         </>
     );
 };

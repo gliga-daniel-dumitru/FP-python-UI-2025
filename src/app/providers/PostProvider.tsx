@@ -15,6 +15,7 @@ interface PostContextProps {
     error: string | null;
     loading: boolean;
     showNotification: (type: NotificationType, message: string) => void;
+    addComment: (postId: string, commentContent: string) => Promise<void>;
 }
 
 const PostContext = createContext<PostContextProps | undefined>(undefined);
@@ -25,14 +26,16 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
 
-    const apiUrl = 'http://localhost:3000/api/posts';
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+    const postsUrl = `${baseUrl}/api/posts`;
+    const commentsUrl = `${baseUrl}/api/comments`;
 
     // Fetch all posts
     const fetchPosts = async () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await axios.get<Post[]>(apiUrl);
+            const response = await axios.get<Post[]>(postsUrl);
             setPosts(response.data);
             showNotification('success', 'Posts fetched successfully!');
         } catch (err) {
@@ -51,7 +54,7 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 throw new Error('Post content cannot be empty.');
             }
 
-            const response = await axios.post<Post>(apiUrl, { content });
+            const response = await axios.post<Post>(postsUrl, { content });
             setPosts((prevPosts) => [response.data, ...(prevPosts || [])]);
             showNotification('success', 'Post created successfully!');
         } catch (err: any) {
@@ -67,7 +70,7 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({ children
             if (updatedPost.content && updatedPost.content.trim() === '') {
                 throw new Error('Post content cannot be empty.');
             }
-            const response = await axios.patch<Post>(`${apiUrl}/${id}`, updatedPost);
+            const response = await axios.patch<Post>(`${postsUrl}/${id}`, updatedPost);
             setPosts((prevPosts) =>
                 (prevPosts || []).map((post) => (post.id === id ? { ...post, ...response.data } : post))
             );
@@ -83,11 +86,42 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const deletePost = async (id: string) => {
         setError(null);
         try {
-            await axios.delete(`${apiUrl}/${id}`);
+            await axios.delete(`${postsUrl}/${id}`);
             setPosts((prevPosts) => (prevPosts || []).filter((post) => post.id !== id));
             showNotification('success', 'Post deleted successfully!');
         } catch (err: any) {
             const message = err.response?.data?.message || 'Failed to delete post. Please try again.';
+            setError(message);
+            showNotification('error', message);
+        }
+    };
+
+    // Add a comment to a post
+    const addComment = async (postId: string, commentContent: string) => {
+        setError(null);
+        try {
+            if (!commentContent || commentContent.trim() === '') {
+                throw new Error('Comment content cannot be empty.');
+            }
+            const response = await axios.post(`${commentsUrl}`, { postId, content: commentContent });
+            if (!response.data) {
+                throw new Error('Failed to add comment.');
+            }
+            // Update the posts state with the new comment
+            setPosts((prevPosts) =>
+                (prevPosts || []).map((post) =>
+                    post.id === postId
+                        ? {
+                              ...post,
+                              comments: [response.data, ...(post.comments || [])]
+                          }
+                        : post
+                )
+            );
+
+            showNotification('success', 'Comment added successfully!');
+        } catch (err: any) {
+            const message = err.response?.data?.message || 'Failed to add comment. Please try again.';
             setError(message);
             showNotification('error', message);
         }
@@ -101,6 +135,7 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 createPost,
                 updatePost,
                 deletePost,
+                addComment,
                 showNotification,
                 error,
                 loading
