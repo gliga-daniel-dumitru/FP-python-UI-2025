@@ -21,6 +21,7 @@ export async function GET() {
         );
         return NextResponse.json(postsWithComments);
     } catch (error) {
+        console.error('Error fetching posts:', error);
         return NextResponse.json({ error: 'Failed to fetch posts' }, { status: 500 });
     }
 }
@@ -31,8 +32,8 @@ export async function POST(request: NextRequest) {
         const post = await db.post.create({
             data: {
                 content: body.content,
-                createdAt: new Date(),
-                updatedAt: new Date(),
+                created_at: new Date(),
+                created_at: new Date(),
                 likes: 0
             }
         });

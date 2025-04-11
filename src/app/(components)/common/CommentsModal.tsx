@@ -8,14 +8,28 @@ import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 
 import { formatDistanceToNow } from 'date-fns';
 
-const CommentItem = ({ content, createdAt }: { content: string; createdAt: string }) => {
+const CommentItem = ({
+    content,
+    created_at,
+    onDeleteComment
+}: {
+    content: string;
+    created_at: string;
+    onDeleteComment: () => void;
+}) => {
     return (
-        <div className='rounded-lg bg-gray-50 p-4 dark:bg-[#2d2d2d]'>
-            <div className='mb-2 flex items-center justify-between'>
-                <span className='font-medium text-gray-600 dark:text-white'>anonymous</span>
-                <span className='text-sm text-gray-400 dark:text-gray-200'>
-                    {formatDistanceToNow(new Date(createdAt))}
-                </span>
+        <div className='mb-2 rounded-lg bg-gray-50 p-4 dark:bg-[#2d2d2d]'>
+            <div className='mb-2 flex items-center justify-between align-baseline'>
+                <div className='mb-2 flex items-center justify-between gap-2'>
+                    <span className='font-medium text-gray-600 dark:text-white'>anonymous</span>
+                    <span className='text-sm text-gray-400 dark:text-gray-200'>
+                        {formatDistanceToNow(new Date(created_at))}
+                    </span>
+                </div>
+
+                <button onClick={onDeleteComment} className='cursor-pointer text-red-600 hover:text-red-800'>
+                    <i className='ri-delete-bin-line'></i>
+                </button>
             </div>
             <p className='break-words text-gray-700 dark:text-white'>{content}</p>
         </div>
@@ -25,12 +39,14 @@ export default function CommentsModal({
     open,
     setOpen,
     comments,
-    onCreateComment
+    onCreateComment,
+    onDeleteComment
 }: {
     comments: Comment[] | null;
     open: boolean;
     setOpen: (open: boolean) => void;
     onCreateComment: (commentContent: string) => void;
+    onDeleteComment: (commentId: string) => void;
 }) {
     const [commentContent, setCommentContent] = useState<string>('');
 
@@ -90,12 +106,17 @@ export default function CommentsModal({
                                         </svg>
                                     </button>
                                 </div>
+                                <div
+                                    className={`text-center text-gray-500 ${!(comments ?? []).length ? '' : 'hidden'}`}>
+                                    No comments yet.
+                                </div>
                                 <div className='h-[250px] overflow-scroll'>
                                     {(comments ?? []).map((comment) => (
                                         <CommentItem
                                             key={comment.id}
                                             content={comment.content}
-                                            createdAt={comment.createdAt}
+                                            created_at={comment.created_at}
+                                            onDeleteComment={() => onDeleteComment(comment.id)}
                                         />
                                     ))}
                                 </div>

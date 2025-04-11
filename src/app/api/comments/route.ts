@@ -29,8 +29,8 @@ export async function POST(request: NextRequest) {
         const comment = await db.comment.create({
             data: {
                 content: body.content,
-                createdAt: new Date(),
-                updatedAt: new Date(),
+                created_at: new Date(),
+                created_at: new Date(),
                 postId: body.postId
             }
         });

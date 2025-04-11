@@ -16,20 +16,20 @@ datasource db {
 }
 
 model Post {
-  id        String   @id @default(uuid())   // Unique identifier for the post
-  content   String                          // Content of the post
-  createdAt DateTime @default(now())        // Timestamp when the post was created
-  updatedAt DateTime @updatedAt             // Timestamp when the post was last updated
-  likes     Int      @default(0)                 // Number of likes for the post
-  detectedEmotion String?                        // Detected emotion from the post content
-  comments  Comment[]                     // One-to-many relationship with Comment
+  id         String    @id @default(uuid())
+  content    String
+  created_at DateTime  @default(now())
+  updated_at DateTime
+  likes      Int       @default(0)
+  sentiment  String?
+  comments   Comment[]
 }
 
 model Comment {
-  id        String   @id @default(uuid())   // Unique identifier for the comment
-  content   String                          // Content of the comment
-  createdAt DateTime @default(now())        // Timestamp when the comment was created
-  updatedAt DateTime @updatedAt             // Timestamp when the comment was last updated
-  postId    String                          // Foreign key to Post
-  post      Post     @relation(fields: [postId], references: [id]) // Relation to Post
+  id         String   @id @default(uuid())
+  content    String
+  created_at DateTime @default(now())
+  updated_at DateTime
+  postId     String
+  post       Post     @relation(fields: [postId], references: [id])
 }

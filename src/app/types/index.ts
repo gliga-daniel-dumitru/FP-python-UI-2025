@@ -1,18 +1,17 @@
 export interface Post {
     id: string;
     content: string;
-    createdAt: string;
-    updatedAt: string;
+    created_at: string;
+    updated_at: string;
     likes: number;
     comments?: Comment[] | null;
-    detectedEmotion?: string;
+    sentiment?: string;
 }
 
 export interface Comment {
     id: string;
     content: string;
-    createdAt: string;
-    updatedAt: string;
+    created_at: string;
+    updated_at: string;
     postId: string;
-    post?: Post;
 }

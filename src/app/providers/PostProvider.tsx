@@ -9,13 +9,15 @@ import axios from 'axios';
 interface PostContextProps {
     posts: Post[] | null;
     fetchPosts: () => Promise<void>;
-    createPost: (content: string) => Promise<void>;
-    updatePost: (id: string, updatedPost: Partial<Pick<Post, 'content' | 'likes'>>) => Promise<void>;
+    createPost: (content: string) => Promise<boolean>;
+    updatePost: (id: string, updatedPost: Partial<Pick<Post, 'content' | 'likes'>>) => Promise<boolean>;
+    likePost: (id: string) => Promise<boolean>;
     deletePost: (id: string) => Promise<void>;
     error: string | null;
     loading: boolean;
     showNotification: (type: NotificationType, message: string) => void;
     addComment: (postId: string, commentContent: string) => Promise<void>;
+    deleteComment: (commentId: string) => Promise<void>;
 }
 
 const PostContext = createContext<PostContextProps | undefined>(undefined);
@@ -27,10 +29,9 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [loading, setLoading] = useState<boolean>(false);
 
     const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
-    const postsUrl = `${baseUrl}/api/posts`;
-    const commentsUrl = `${baseUrl}/api/comments`;
+    const postsUrl = `${baseUrl}/posts`;
+    const commentsUrl = `${baseUrl}/comments`;
 
-    // Fetch all posts
     const fetchPosts = async () => {
         setLoading(true);
         setError(null);
@@ -57,10 +58,32 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({ children
             const response = await axios.post<Post>(postsUrl, { content });
             setPosts((prevPosts) => [response.data, ...(prevPosts || [])]);
             showNotification('success', 'Post created successfully!');
+            return true;
         } catch (err: any) {
             const message = err.response?.data?.message || 'Failed to create post. Please try again.';
             setError(message);
             showNotification('error', message);
+            return false;
+        }
+    };
+
+    const likePost = async (id: string) => {
+        setError(null);
+        try {
+            const {
+                data: { likes }
+            } = await axios.post<{ likes: number }>(`${postsUrl}/${id}/like`);
+            if (!likes) {
+                throw new Error('Failed to like post.');
+            }
+            setPosts((prevPosts) => (prevPosts || []).map((post) => (post.id === id ? { ...post, likes } : post)));
+            showNotification('success', 'Post liked successfully!');
+            return true;
+        } catch (err: any) {
+            const message = err.response?.data?.message || 'Failed to like post. Please try again.';
+            setError(message);
+            showNotification('error', message);
+            return false;
         }
     };
 
@@ -70,15 +93,17 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({ children
             if (updatedPost.content && updatedPost.content.trim() === '') {
                 throw new Error('Post content cannot be empty.');
             }
-            const response = await axios.patch<Post>(`${postsUrl}/${id}`, updatedPost);
+            const response = await axios.put<Post>(`${postsUrl}/${id}`, updatedPost);
             setPosts((prevPosts) =>
                 (prevPosts || []).map((post) => (post.id === id ? { ...post, ...response.data } : post))
             );
             showNotification('success', 'Post updated successfully!');
+            return true;
         } catch (err: any) {
             const message = err.response?.data?.message || 'Failed to update post. Please try again.';
             setError(message);
             showNotification('error', message);
+            return false;
         }
     };
 
@@ -103,7 +128,7 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({ children
             if (!commentContent || commentContent.trim() === '') {
                 throw new Error('Comment content cannot be empty.');
             }
-            const response = await axios.post(`${commentsUrl}`, { postId, content: commentContent });
+            const response = await axios.post(commentsUrl, { post_id: postId, content: commentContent });
             if (!response.data) {
                 throw new Error('Failed to add comment.');
             }
@@ -127,6 +152,26 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
     };
 
+    // Delete a comment
+    const deleteComment = async (commentId: string) => {
+        setError(null);
+        try {
+            await axios.delete(`${commentsUrl}/${commentId}`);
+            // Update the posts state to remove the deleted comment
+            setPosts((prevPosts) =>
+                (prevPosts || []).map((post) => ({
+                    ...post,
+                    comments: (post.comments || []).filter((comment) => comment.id !== commentId)
+                }))
+            );
+            showNotification('success', 'Comment deleted successfully!');
+        } catch (err: any) {
+            const message = err.response?.data?.message || 'Failed to delete comment. Please try again.';
+            setError(message);
+            showNotification('error', message);
+        }
+    };
+
     return (
         <PostContext.Provider
             value={{
@@ -136,6 +181,8 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 updatePost,
                 deletePost,
                 addComment,
+                deleteComment,
+                likePost,
                 showNotification,
                 error,
                 loading

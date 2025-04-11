@@ -8,7 +8,7 @@ import PostCard from './PostCard';
 import PostCardSkeleton from './PostCardSkeleton';
 
 const PostsList = () => {
-    const { loading, error, posts, fetchPosts } = usePosts();
+    const { loading, posts, fetchPosts } = usePosts();
 
     useEffect(() => {
         void fetchPosts();
@@ -22,10 +22,6 @@ const PostsList = () => {
                 <PostCardSkeleton />
             </>
         );
-    }
-
-    if (error) {
-        return <div className='text-center text-red-500'>{error}</div>;
     }
 
     return (

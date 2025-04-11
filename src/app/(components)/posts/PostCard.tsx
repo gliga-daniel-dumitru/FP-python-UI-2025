@@ -14,17 +14,20 @@ interface PostCardProps {
 }
 
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
-    const { updatePost, deletePost, addComment } = usePosts();
+    const { likePost, updatePost, deletePost, addComment, deleteComment } = usePosts();
     const [tempPostContent, setTempPostContent] = React.useState<string>(post.content);
     const [showComments, setShowComments] = React.useState(false);
 
     const [confirmDelete, setConfirmDelete] = React.useState(false);
+    const [confirmDeleteComment, setConfirmDeleteComment] = React.useState(false);
     const [showEdit, setShowEdit] = React.useState(false);
 
-    const handleOnEdit = () => {
-        setShowEdit(false);
+    const handleOnEdit = async () => {
         if (tempPostContent !== post.content) {
-            updatePost(post.id, { content: tempPostContent });
+            const updated = await updatePost(post.id, { content: tempPostContent });
+            if (updated) {
+                setShowEdit(false);
+            }
         }
     };
 
@@ -34,11 +37,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
     };
 
     const handleOnLike = () => {
-        if (post.likes) {
-            updatePost(post.id, { likes: post.likes + 1 });
-        } else {
-            updatePost(post.id, { likes: 1 });
-        }
+        likePost(post.id);
     };
 
     const handleOnCreateComment = (commentContent: string) => {
@@ -51,11 +50,11 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                 <div className='flex items-center justify-between'>
                     <div className='flex items-center space-x-2'>
                         <span className='font-medium text-gray-600 dark:text-white'>anonymous</span>
-                        {post?.detectedEmotion && (
+                        {post?.sentiment && (
                             <div className='lightb-g-gray-100_dark_bg-neutral-700 flex items-center space-x-1 rounded-full px-2 py-1'>
                                 <i className={`ri-emotion-happy-line lightb-text-gray-100_dark_text-neutral-700`}></i>
                                 <span className='text-xs text-gray-600 capitalize dark:text-white'>
-                                    {post.detectedEmotion}
+                                    {post.sentiment}
                                 </span>
                             </div>
                         )}
@@ -75,7 +74,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                     </div>
                 </div>
                 <span className='text-sm text-gray-400 dark:text-gray-200'>
-                    {formatDistanceToNow(new Date(post.createdAt))}
+                    {formatDistanceToNow(new Date(post.created_at))}
                 </span>
                 {showEdit ? (
                     <div className='my-4'>
@@ -129,6 +128,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                 setOpen={setShowComments}
                 comments={post.comments ?? []}
                 onCreateComment={handleOnCreateComment}
+                onDeleteComment={deleteComment}
             />
         </>
     );

@@ -31,4 +31,7 @@
     ],
     "eslint.format.enable": true,
     "npm.packageManager": "npm",
+    "[prisma]": {
+        "editor.defaultFormatter": "Prisma.prisma"
+    },
 }

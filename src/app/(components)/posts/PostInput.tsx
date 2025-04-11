@@ -17,11 +17,13 @@ const PostInput = () => {
         setCharCount(value.length);
     };
 
-    const handlePostSubmit = () => {
+    const handlePostSubmit = async () => {
         if (postContent.trim()) {
-            createPost(postContent);
-            setPostContent('');
-            setCharCount(0);
+            const postCreated = await createPost(postContent);
+            if (postCreated) {
+                setPostContent('');
+                setCharCount(0);
+            }
         }
     };
 
