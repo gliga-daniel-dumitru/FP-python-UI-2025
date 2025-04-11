@@ -50,14 +50,11 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                 <div className='flex items-center justify-between'>
                     <div className='flex items-center space-x-2'>
                         <span className='font-medium text-gray-600 dark:text-white'>anonymous</span>
-                        {post?.sentiment && (
-                            <div className='lightb-g-gray-100_dark_bg-neutral-700 flex items-center space-x-1 rounded-full px-2 py-1'>
-                                <i className={`ri-emotion-happy-line lightb-text-gray-100_dark_text-neutral-700`}></i>
-                                <span className='text-xs text-gray-600 capitalize dark:text-white'>
-                                    {post.sentiment}
-                                </span>
-                            </div>
-                        )}
+                        <div className='lightb-g-gray-100_dark_bg-neutral-700 flex items-center space-x-1 rounded-full px-2 py-1'>
+                            <span className='text-xs text-gray-600 capitalize dark:text-white'>
+                                {post?.sentiment ?? 'neutral'}
+                            </span>
+                        </div>
                     </div>
 
                     <div className='mt-2 flex items-center space-x-2'>
